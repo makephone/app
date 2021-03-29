@@ -1,0 +1,709 @@
+<!DOCTYPE html> 
+<html lang="pt-br">
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link href="fontes/icon.css" rel="stylesheet">
+      <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+      <script src="js/jquery-2.1.1.min.js"></script>
+      <script src="js/firebase.js"></script>
+      <script src="js/firebase1.js"></script>
+      <script src="js/jquery.mobile-1.4.5.min.js"></script>
+      <script src="js/firebase-app.js"></script>
+      <script src="js/firebase-auth.js"></script>
+      <script src="js/firebase-storage.js"></script>
+      <script type="text/javascript" src="cordova.js"></script>
+      <style>
+         .pagina_login{
+         background-attachment: fixed;
+         background-image: url(img/BG-Login.jpg);
+         background-repeat: no-repeat;
+         background-size: cover;
+         display: flex;
+         flex-direction: column;
+         height: 90vh;
+         justify-content: space-between;
+         position: relative;
+         width: 100%;
+         }
+         .espace_input{
+         margin-top:40px;
+         text-align:center;
+         font-size:20px;
+         padding-bottom:40px;
+         }
+         .amare{
+         color: yellow;
+         text-decoration:none;
+         }
+         .center{
+         text-align:center;
+         font-size:15px
+         }
+         .perfil{
+         width:100%;
+         border-radius:10%;
+         }
+         .tela_TODA{
+         width:100%;
+         }
+         .perfil{
+         width:20%;margin-left:75%;
+         }
+         .logo_login{
+         width:30%;display:block;margin-left:auto;margin-right:auto;
+         }
+         .tela_direita{
+         width:45%;border-radius:5%;padding-right:5%;
+         }
+         .tela_esquerda{
+         width:45%;border-radius:5%;padding-left:5%;
+         }
+         .tabelada{
+         display:flex;flex-direction: row;}
+         .avatar{
+         width:95%;border-radius:50%;
+         }
+         .tabel{
+         width:45%; margin-top:-10%;
+         }
+         .tabel2{
+         width:20%; margin-top:-10%;
+         }
+         .center1{display:flex;align:center;margin-left:30%;}
+         .fonte30{
+         font-size:30px;
+         }
+         .centralizado{
+         text-align: center;
+         }
+		 .alto{
+		 width:100%;height:50px;
+		 }
+		 
+      </style>
+      <script>
+var x=$(document);
+//x.ready(main);
+document.addEventListener("deviceready", main, false);
+
+function main() {
+	$.mobile.phonegapNavigationEnabled = true;
+	$.mobile.buttonMarkup.hoverDelay = 1;
+	$.mobile.loadingMessage = "Carregando..";
+	var chavevalregistrebacke = null;
+	var contador = 0;
+
+    var user={nome:"",foto:"",email:""};
+     
+
+	var pet={sexo:"FEMEA",status:"PERDIDO"};
+
+
+
+
+
+	var tipo=1;
+	var pagina=1;
+	
+	firebaseConfig = {
+		apiKey: "AIzaSyC2I8U8fp-uPBfgayoeBoV-Oeo7HiJhamk",
+		authDomain: "realtime-appfff.firebaseapp.com",
+		databaseURL: "https://realtime-appfff.firebaseio.com",
+		projectId: "realtime-appfff",
+		storageBucket: "realtime-appfff.appspot.com",
+		messagingSenderId: "730378923126",
+		appId: "1:730378923126:web:09a473d5f2aca98a"
+	};
+	// Initialize Firebase
+	firebase.initializeApp(firebaseConfig);
+	//request("Perdido",1);
+
+	// request("verao",0);
+	$(".usuario").click(perfil);
+
+	function perfil() {
+		request(user.email, 0);
+	}
+
+	$("#login a").click(logradouro);
+
+	function logradouro() {
+		if (contador) {
+			$.mobile.loading("show", {
+         text: "Carregando !!! .",
+         textVisible: true
+         });
+			pegadata(chavevalregistrebacke);
+		} else {
+			chavevalregistrebacke = Math.floor(Math.random() * 256);
+			var url = 'https://realtime-appfff.firebaseapp.com/' + chavevalregistrebacke;
+			//window.open(url);
+			cordova.InAppBrowser.open(url, '_system', 'location=yes');
+			setTimeout(() => {
+				$(this).text("Continuar")
+				contador = 1;
+			}, 10000);
+		}
+	}
+	
+	
+	function conexao(){
+	
+
+function alertDismissed() {
+    // do something
+}
+
+navigator.notification.alert(
+    'Conexão Ruim!',  // message
+    alertDismissed,         // callback
+    'Falha de Rede',            // title
+    'Fechar'                  // buttonName
+);
+
+
+
+
+
+	}
+	
+
+
+	function pegadata(k) {
+		var storageRef = firebase.storage().ref();
+		console.log(k);
+		console.log(k);
+		k = k + ".txt";
+		var ref = storageRef.child(k);
+		ref.getDownloadURL().then(function (cam) {
+			// `url` is the download URL for 'images/stars.jpg'
+
+			// This can be downloaded directly:
+			var xhr = new XMLHttpRequest();
+			xhr.responseType = 'blob';
+			xhr.onload = function (event) {
+				var blob = xhr.response;
+			};
+			xhr.open('GET', cam);
+			xhr.send();
+			refresh(cam, k)
+
+		}).catch(function (error) {
+              conexao();
+
+			setTimeout(() => {
+			
+				pegadata(chavevalregistrebacke);
+			}, 30000);
+			// Handle any errors
+		});
+
+
+		function refresh(bus, k) {
+		
+			$.mobile.allowCrossDomainPage = true;
+			$.support.cors = true;
+			$.mobile.ajaxEnabled=true;
+			var ajax = $.ajax({
+				url: bus,
+				dataType: "jsonp",
+				timeout: '10000',
+				async: true,
+				jsonpCallback: 'jsonCalback',
+				crossDomain: true
+			}).done(function (data) {
+				user.nome = data.nome;
+				user.foto = data.foto;
+				user.email = data.email;
+				del(k);
+			}).fail(function (jqXHR, texStatus) {
+
+				conexao();
+
+			});
+
+		}
+
+
+		////
+		function del(k) {
+			var deleteRef = storageRef.child(k);
+			deleteRef.delete()
+				.then(function () {
+					$('.usuarioName').text(user.nome);
+					$('.usuarioMail').text(user.email);
+					$('.avatar').attr({
+						src: user.foto
+					})
+					$('#avatar').attr({
+						src: user.foto
+					})
+					contador = 0;
+					$.mobile.changePage('#inicial');
+					request(1, 1);
+
+
+				})
+				.catch(function (err) {
+					conexao();
+				})
+		}
+
+
+	}
+
+
+	function deletaDOR() {
+	    $.mobile.ajaxEnabled=true;
+		var id = $(this).attr('title');
+		var url = "http://blogecia.atwebpages.com/edi.php?id=" + id;
+		$.mobile.allowCrossDomainPage = true;
+		$.support.cors = true;
+		var ajax = $.ajax({
+			url: url,
+			dataType: "jsonp",
+			timeout: '10000',
+			async: true,
+			jsonpCallback: 'jsonCalback',
+			crossDomain: true
+		}).done(function (data) {
+			request(user.email, 0);
+		}).fail(function (jqXHR, texStatus) {
+			conexao();
+		});
+
+
+	}
+
+
+	function detalhePagina() {
+
+		var json = $(this).val();
+		if (json == "") {
+			json = $(this).attr('title');
+		}
+		json = json.split("#");
+		var email = "mailto:" + json[5];
+		$('#email').attr({
+			href: email
+		});
+		var telefone = "tel:" + json[4];
+		$('#telefone').attr({
+			href: telefone
+		});
+		$('#nomeTitulo').text(json[0]);
+		$('#sexo').text(json[2]);
+		var agora = new Date();
+		agora = agora.getFullYear();
+		var idade = agora - json[1];
+		$('#idade').text(idade);
+		var tela = '<h2>' + json[0] + '</h2>';
+		tela += '<img src="' + json[3] + '" class="tela_TODA">';
+		var status = "" + json[6];
+		if (status == "ADOCAO") {
+			status = "ADOÇÃO";
+		}
+
+		$("#status").text(status);
+		$("#vista").html(tela);
+		$.mobile.ajaxEnabled=false;
+		$.mobile.changePage('#detalhe');
+	}
+
+	function request(param, codicional) {
+	     
+		url = "http://blogecia.atwebpages.com/paginas.php?param="+ param+"&page="+pagina;
+		$.mobile.allowCrossDomainPage = true;
+		$.support.cors = true;
+		$.mobile.ajaxEnabled=true;
+		
+		 $.mobile.loading("show", {
+         text: "Carregando !!! .",
+         textVisible: true
+         });
+		
+		
+		
+		var ajax = $.ajax({
+			url: url,
+			dataType: "jsonp",
+			timeout: '10000',
+			async: true,
+			jsonpCallback: 'jsonCalback',
+			crossDomain: true
+		}).done(function (data) {
+			var img = "";
+			$.mobile.loading("hide");
+			if (codicional) {
+			   var cache=$("#catalogo").html();
+			   $('#catalogo').html("");
+				$.each(data, function (i, val) {
+				img +='<h2>' + val.nome + '</h2><button data-ajax="false" value="' + val.nome + '#' + val.nascimento + '#' + val.sexo + '#http://blogecia.atwebpages.com/imagem.php?img=' + val.url_foto + '#' + val.telefone + '#' + val.email + '#' + val.status + '"><img src="http://blogecia.atwebpages.com/imagem.php?img=' + val.url_foto + '" class="detalhe tela_TODA"></button>';
+				
+				})
+				cache=cache+img;
+				$("#catalogo").html(cache);
+                   
+				$('#catalogo button').click(detalhePagina);
+			} else {
+				var list = "";
+				$.each(data, function (i, val) {
+					list += '<li><a class="detPet" title="' + val.nome + '#' + val.nascimento + '#' + val.sexo + '#http://blogecia.atwebpages.com/imagem.php?img=' + val.url_foto + '#' + val.telefone + '#' + val.email + '#' + val.status + '" > <img src="http://blogecia.atwebpages.com/imagem.php?img=' + val.url_foto + '"><h1>' + val.nome + '</h1><span class="ui-li-aside">' + val.sexo + '</span><p>' + val.status + ' / ' + val.nascimento + ' </p></a><li><button title="' + val.id + '" data-icon="delete" class="deletePet" >Deletar</button>';
+				})
+				$("#listaMeuPet").html(list);
+				$("#listaMeuPet").listview("refresh");
+				$("#listaMeuPet").trigger("updatelayout");
+				$("#listaMeuPet li .detPet").click(detalhePagina);
+				$(".deletePet").click(deletaDOR);
+
+
+			}
+
+
+		}).fail(function (jqXHR, texStatus) {
+			conexao();
+		});
+
+
+	}
+
+	$('#slider').on('change', function () {
+		$("#catalogo").html("");
+		tipo=this.value;
+		pagina=1;
+		request(tipo, 1);
+
+	});
+
+	$('#diva').on('change', function () {
+
+		pet.sexo = this.value;
+
+
+	});
+
+
+	$('#diva1').on('change', function () {
+
+		pet.status = this.value;
+
+	});
+
+
+	$("#pronegarp").click(foto);
+
+	function foto() {
+		navigator.camera.getPicture(uploadPhoto, onError, camearaOptions);
+		var camearaOptions = {
+			quality: 25,
+			destinationType: navigator.camera.DestinationType.FILE_URI,
+			sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
+		}
+
+		function onError(err) {
+			history.back();
+		}
+
+		function uploadPhoto(imageURI) {
+			var image = $('#myImage');
+			image.attr('src', imageURI);
+			history.back();
+
+
+		}
+
+	};
+
+	$('#btlInSere').click(upload);
+	function limpa(){
+	var image = $('#myImage');
+	image.attr('src', '');
+	$("#meupetName").val('');
+	$("#meupetNumber").val('');
+	$("#meupetTel").val('');
+	}
+
+	function cadastraPet(name, tel, mail, sex, photo, nas, status) {
+		//http://blogecia.atwebpages.com/insert.php?name=t&tel=1&mail=aaa@sss&sex=MACHO&photo=1.jpg&nasc=2018&status=PERDIDO
+		//http://localhost/LIVRO/app/1/insert.php?name=t&tel=1&mail=aaa@sss&sex=MACHO&photo=1.jpg&nasc=2018&status=PERDIDO
+		var urls = "http://blogecia.atwebpages.com/insert.php?name=" + name + "&tel=" + tel + "&mail=" + mail + "&sex=" + sex + "&photo=" + photo + "&nasc=" + nas + "&status=" + status;
+		$.mobile.allowCrossDomainPage = true;
+		$.support.cors = true;
+		$.mobile.ajaxEnabled=true;
+		
+		var ajax = $.ajax({
+			url: urls,
+			dataType: "jsonp",
+			timeout: '10000',
+			async: true,
+			jsonpCallback: 'jsonCalback',
+			crossDomain: true
+		}).done(function (data) {
+		alert("Pet cadastrado");
+		limpa();
+
+		}).fail(function (jqXHR, texStatus) {
+			conexao();
+		});
+
+
+	}
+
+
+	function upload() {
+        var imageURI = $("#myImage").attr('src');
+		if (imageURI == null) {
+			alert("tire uma foto");
+		} else {
+             alert("fazendo upload! ")
+			var pet = $("#meupetName").val();
+			var num = $("#meupetNumber").val();
+			var tel = $("#meupetTel").val();
+			
+			if(pet!=""&& num!="" && tel!=""){
+
+			var options = new FileUploadOptions();
+				options.fileKey = "file";
+				options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+				var nomefoto = user.email + options.fileName;
+				options.mimeType = "image/jpeg";
+				var ft = new FileTransfer();
+				ft.upload(imageURI, "http://blogecia.atwebpages.com/upload.php?email=" + user.email,
+					function (result) {
+					cadastraPet(pet, tel, user.email, pet.sexo, nomefoto, num, pet.status)
+						// function cadastraPet(name,tel,mail,sex,photo,nas,status)
+
+					},
+					function (error) {
+						alert("falha");
+					}, options);
+					}else{
+					alert('prencha o cadasto!')
+					
+					}
+			
+
+		}
+	}
+	$(".seja").click(extra);
+	
+	$(".buds").click(paginacao);
+	
+	function paginacao(){
+	pagina++;
+	request(tipo, 1);
+	}
+
+	function extra() {
+
+
+		var text = ""
+		text += ' <div  class="center1">Cuide do <b><div class="fonte30"> seu Pet!</div></b></div>'
+		text += '<div>'
+		text += '<video class="tela_TODA" poster="img/video.png" controls>'
+		text += '<source src="http://blogecia.atwebpages.com/videoplayback.mp4" type="video/mp4">'
+		text += '</video>'
+		text += '</div>'
+		text += '<br><br>'
+		text += '<div  class="center1">Ajude<b><div class="fonte30"> Um Pet!</div></b></div>'
+		text += '<div>'
+		text += '<video class="tela_TODA" poster="img/video.png" controls>'
+		text += '<source src="http://blogecia.atwebpages.com/campanhaPet.mp4" type="video/mp4">'
+		text += '</video>'
+		text += '</div>'
+
+
+		$("#extra").html(text);
+	}
+
+
+}
+         
+      </script>
+   </head>
+   <body>
+      <div data-role="page" id="login" class="pagina_login">
+         <!-- /pagina de login --> 
+         <div data-role="header">
+         </div>
+         <!-- /header -->
+         <div data-role="content">
+            <img src="logo/logo.png" class="logo_login"><br><br>
+            <h2 class="espace_input" >QUEM VÊ RAÇA NÃO VÊ CORAÇÃO</h2>
+            <h2 class="centralizado">
+            <div class="amare">Login</div>
+            <h2>
+            <form> 
+               <a class="ui-shadow ui-btn ui-corner-all"  >Google</a>
+            </form>
+         </div>
+         <!-- /content -->
+         <div data-role="footer" data-position="fixed">
+         </div>
+         <!-- /footer -->
+      </div>
+      <!-- /page -->
+      <div data-role="page" id="inicial" >
+         <!-- /pagina inicial --> 
+         <div data-role="header">
+            <a href="#login" class="ui-btn-left">Login</a>
+            <img src="logo/logo.png" class="perfil">
+            <table class="tabel">
+               <tr>
+                  <th><a href="#"><img src="" class="avatar"></a></th>
+                  <th>
+                     <form>
+                        <select data-role="slider" id="slider">
+                           <option value="1">Perdido</option>
+                           <option value="2">Adoção</option>
+                        </select>
+                     <form>
+                  </th>
+               </tr>
+            </table>
+         </div>
+         <!-- /header -->
+         <div data-role="content">
+         <div id="catalogo">
+         </div>
+		 <div class="buds alto"></div>
+         </div> <!-- /content -->
+		 
+         <div data-role="footer" data-position="fixed">
+         <div data-role="navbar">
+         <ul>
+         <li><a href="#" class="ui-btn-active" data-icon="home"></a></li>
+         <li><a href="#shop" class="seja" data-icon="video"></a></li>
+         <li><a href="#perfil" class="usuario" data-icon="user"></a></li>
+         </ul>
+         </div> <!-- /navbar -->
+         </div> <!-- /footer -->
+      </div>
+      <!-- /page --> 
+      <div data-role="page" id="shop"><!-- /pagina de loja --> 
+      <div data-role="header">
+      <a href="#login" class="ui-btn-left">Login</a>
+      <img src="logo/logo.png" class="perfil">
+      <table class="tabel2"">
+      <tr>
+      <th><a href="#" ><img src="" class="avatar"></a></th>
+      </tr>
+      </table>
+      </div> <!-- /header -->
+      <div data-role="content"id="extra" >
+      </div> <!-- /content -->
+      <div data-role="footer" data-position="fixed">
+      <div data-role="navbar">
+      <ul>
+      <li><a href="#inicial" data-icon="home"></a></li>
+      <li><a class="seja ui-btn-active" href="#"  data-icon="video"></a></li>
+      <li><a class="usuario" href="#perfil" data-icon="user"></a></li>
+      </ul>
+      </div> <!-- /navbar -->
+      </div> <!-- /footer -->
+      </div><!-- /page -->
+      <div data-role="page" id="detalhe" >   <!-- /pagina detalhe --> 
+      <div data-role="header">
+      <a href="#login" class="ui-btn-left">Login</a>
+      <img src="logo/logo.png" class="perfil">
+      <table class="tabel">
+      <tr>
+      <th><img src="" class="avatar"></th>
+      <th><div id="status" class="fonte30">Perdido</div></th>
+      </tr>
+      </table>
+      </div> <!-- /header -->
+      <div data-role="content">
+      <div id="vista">
+      </div>
+      <div data-role="collapsible">
+      <h3>Detalhes</h3>
+      Nome:<div id="nomeTitulo"></div><br>Idade:<div id="idade" ></div><br>Sexo:<div id="sexo"></div>
+      </div>
+      <table class="tela_TODA">
+      <tr><th><a id="telefone" href="#" data-role="button" >Telefone</a></th><th><a data-role="button" id="email" >Email</a></th></tr>
+      </table>
+      </div> <!-- /content -->
+      <div data-role="footer" data-position="fixed">
+      </div> <!-- /footer -->
+      </div> <!-- /page --> 
+      <div data-role="page" id="perfil" >   <!-- /pagina perfil --> 
+      <div data-role="header">
+      <a href="#login" class="ui-btn-left">Login</a>
+      <img src="logo/logo.png" class="perfil">
+      <table class="tabel">
+      <tr>
+      <th><img src="" class="avatar"></th>
+      <th><div class="fonte30">Perfil</div></th>
+      </tr>
+      </table>
+      </div> <!-- /header -->
+      <div data-role="content">
+      <div id="catalogo">
+       <h2>Cadastro</h2>  
+      <img id="avatar" src="" class="tela_TODA">
+      <div data-role="collapsible">
+      <h3>Detalhes</h3>
+      Nome: <div class="usuarioName"></div><br>Email:<div class="usuarioMail"></div><br>
+      </div>
+      <div data-role="collapsible" id="Busc_PEt" >
+      <h3>Meus Pets</h3>
+      <table>
+      <tr>
+      <th><a data-role="button" href="#add" data-icon="plus" data-iconpos="notext"></a></th><th>Adicionar</th>
+      </tr>
+      </table> <br>
+      <ul data-role="listview" id="listaMeuPet">
+      <ul>
+      </div>	
+                     
+      </div>
+      </div> <!-- /content -->
+      <div data-role="footer" data-position="fixed">
+		<div data-role="navbar">
+		<ul>
+		<li><a href="#inicial"  data-icon="home"></a></li>
+		<li><a href="#shop" class="seja" data-icon="video"></a></li>
+		<li><a href="#perfil" class="ui-btn-active" data-icon="user"></a></li>
+		</ul>
+		</div> <!-- /navbar -->
+		</div> <!-- /footer --> <!-- /footer -->
+      </div> <!-- /page --> 
+      <div data-role="page" id="add" >   <!-- /pagina adicionar --> 
+      <div data-role="header">
+      <a href="#login" class="ui-btn-left">Login</a>
+      <img src="logo/logo.png" class="perfil">
+      <table class="tabel">
+      <tr>
+      <th><img src="" class="avatar"></th>
+      <th><div class="fonte30">Pet</div></th>
+      </tr>
+      </table>
+      </div> <!-- /header -->
+      <div data-role="content">
+      <img class="tela_TODA" id="myImage">
+      <button id="pronegarp" data-icon="camera" >Tirar Foto</button>
+      <form>
+      <label>Nome</label>
+      <input id="meupetName" type="text" placeholder="BOB">
+      <label>Nascimento</label>
+      <input id="meupetNumber" type="number" placeholder="2020">
+      <label>Telefone</label>
+      <input id="meupetTel" type="tel" placeholder="988741545">
+      <select id="diva" data-role="slider" >
+      <option value="MACHO">Macho</option>
+      <option value="FEMEA">Fêmea</option>
+      </select>	  
+      <select id="diva1" data-role="slider" >
+      <option value="PERDIDO">PERDIDO</option>
+      <option value="ADOCAO">ADOÇÃO</option>
+      </select>	
+      </form>
+      <button  id="btlInSere" data-icon="edit" >Cadastro</button>
+      </div> <!-- /content -->
+      <div data-role="footer" data-position="fixed">
+      </div> <!-- /footer -->
+      </div> <!-- /page --> 
+   </body>
+</html>
