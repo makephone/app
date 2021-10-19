@@ -107,13 +107,13 @@ function main() {
 	var pagina=1;
 	
 	firebaseConfig = {
-		apiKey: "AIzaSyC2I8U8fp-uPBfgayoeBoV-Oeo7HiJhamk",
-		authDomain: "realtime-appfff.firebaseapp.com",
-		databaseURL: "https://realtime-appfff.firebaseio.com",
-		projectId: "realtime-appfff",
-		storageBucket: "realtime-appfff.appspot.com",
-		messagingSenderId: "730378923126",
-		appId: "1:730378923126:web:09a473d5f2aca98a"
+		apiKey: "-----------------------",
+		authDomain: "---------------------------------",
+		databaseURL: "------------------------------------",
+		projectId: "-------------------------",
+		storageBucket: "-----------------------",
+		messagingSenderId: "-------------------",
+		appId: -----------------------------"
 	};
 	// Initialize Firebase
 	firebase.initializeApp(firebaseConfig);
@@ -457,11 +457,11 @@ navigator.notification.alert(
 			alert("tire uma foto");
 		} else {
              alert("fazendo upload! ")
-			var pet = $("#meupetName").val();
+			var name = $("#meupetName").val();
 			var num = $("#meupetNumber").val();
 			var tel = $("#meupetTel").val();
 			
-			if(pet!=""&& num!="" && tel!=""){
+			if(name!=""&& num!="" && tel!=""){
 
 			var options = new FileUploadOptions();
 				options.fileKey = "file";
@@ -471,7 +471,7 @@ navigator.notification.alert(
 				var ft = new FileTransfer();
 				ft.upload(imageURI, "http://blogecia.atwebpages.com/upload.php?email=" + user.email,
 					function (result) {
-					cadastraPet(pet, tel, user.email, pet.sexo, nomefoto, num, pet.status)
+					cadastraPet(name, tel, user.email, pet.sexo, nomefoto, num, pet.status)
 						// function cadastraPet(name,tel,mail,sex,photo,nas,status)
 
 					},
